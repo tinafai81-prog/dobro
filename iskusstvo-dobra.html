@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Искусство Добра — открытка</title>
+<style>
+:root{--bg:#fff7ec;--card:#fff;--text:#3b2f4a;--muted:#7b6c8a;--line:#eadfce;--acc:#ff6f91;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1726;--card:#2a2236;--text:#f3ecff;--muted:#b3a5c7;--line:#43385a}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Trebuchet MS","Segoe UI",sans-serif}
+main{max-width:480px;margin:0 auto;padding:16px 16px 40px;display:flex;flex-direction:column;gap:14px}
+h1{margin:6px 0 0;font-size:26px}p.s{margin:0;color:var(--muted);font-size:14px}
+canvas{width:100%;height:auto;border-radius:16px;box-shadow:0 8px 24px #0003;background:#fff}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px}
+label{font-size:13px;color:var(--muted)}
+input,textarea{width:100%;font:inherit;font-size:16px;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text)}
+textarea{min-height:90px;resize:none}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.sw{width:44px;height:44px;border-radius:50%;border:3px solid transparent}
+.sw.on{border-color:var(--text)}
+.em{font-size:28px;width:48px;height:48px;border-radius:12px;border:2px solid var(--line);background:var(--bg)}
+.em.on{border-color:var(--acc);background:#ff6f9122}
+.ch{font:inherit;font-size:13px;padding:8px 12px;border-radius:20px;border:1px solid var(--line);background:var(--bg);color:var(--text)}
+#save{font:inherit;font-weight:700;font-size:18px;border:0;border-radius:14px;padding:16px;background:var(--acc);color:#fff}
+#outw{display:none;text-align:center}#outw img{width:100%;border-radius:14px}
+</style></head><body><main>
+<h1>Искусство Добра 💛</h1>
+<p class="s">Сделай открытку с добрыми словами для друга, одноклассника или учителя.</p>
+<canvas id="cv" width="1080" height="1350"></canvas>
+<div class="box">
+ <label>Цвет открытки</label><div class="row" id="th"></div>
+ <label>Стикер</label><div class="row" id="st"></div>
+</div>
+<div class="box">
+ <label>Кому</label><input id="to" maxlength="24" placeholder="Имя друга, учителя, мамы...">
+ <label>Добрые слова</label><textarea id="tx" maxlength="130" placeholder="Напиши от души или выбери идею ниже"></textarea>
+ <div class="row" id="ch"></div>
+ <label>От кого</label><input id="fr" maxlength="24" placeholder="Твоё имя">
+</div>
+<button id="save">Сохранить открытку</button>
+<div class="box" id="outw"><label>Нажми на картинку и удерживай, чтобы сохранить в галерею</label><img id="out" alt="Открытка"></div>
+</main>
+<script>
+const $=i=>document.getElementById(i);
+const TH=[['#ffd6a5','#ff8fab'],['#a0e7e5','#b4f8c8'],['#cdb4ff','#ffafcc'],['#fff3b0','#ffb347']];
+const ST=['💛','🌈','🤝','🌻','🕊️','⭐','🦋','🍀'];
+const ID=['Ты делаешь мир добрее!','Спасибо, что ты рядом','С тобой легко дружить','Твоя улыбка согревает всех','Мы вместе сильнее!','Ты умеешь поддержать, это дорогого стоит'];
+let th=0,st=ST[0];
+const cv=$('cv'),g=cv.getContext('2d'),EF='"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji"',TF='"Trebuchet MS","Segoe UI",sans-serif';
+function wrap(t,x,y,w,lh){let line='';for(const wd of t.split(/\s+/)){const x2=line?line+' '+wd:wd;if(g.measureText(x2).width>w&&line){g.fillText(line,x,y);y+=lh;line=wd}else line=x2}g.fillText(line,x,y)}
+function draw(){const[c1,c2]=TH[th],W=1080,H=1350;
+ const gr=g.createLinearGradient(0,0,W,H);gr.addColorStop(0,c1);gr.addColorStop(1,c2);g.fillStyle=gr;g.fillRect(0,0,W,H);
+ g.textAlign='center';g.textBaseline='middle';g.font='44px '+EF;
+ const D=[st,'✨','🌸',st,'✨','🌸'];
+ for(let i=0;i<22;i++){const t=i/22*2*(W+H),p=t<W?[t,34]:t<W+H?[W-34,t-W]:t<2*W+H?[2*W+H-t,H-34]:[34,2*(W+H)-t];g.fillText(D[i%6],p[0],p[1])}
+ g.fillStyle='rgba(255,255,255,.9)';g.beginPath();g.roundRect?g.roundRect(70,70,940,1210,48):g.rect(70,70,940,1210);g.fill();
+ g.fillStyle='#3b2f4a';g.font='bold 54px '+TF;g.fillText('Искусство Добра',W/2,170);
+ g.font='250px '+EF;g.fillText(st,W/2,410);
+ const to=$('to').value.trim(),tx=$('tx').value.trim()||'Ты делаешь мир добрее!',fr=$('fr').value.trim();
+ g.fillStyle='#3b2f4a';
+ if(to){g.font='bold 58px '+TF;g.fillText(to+',',W/2,600)}
+ g.font='54px '+TF;wrap(tx,W/2,to?700:640,780,76);
+ if(fr){g.font='italic 46px '+TF;g.fillText('С любовью, '+fr,W/2,1100)}
+ g.fillStyle='#7b6c8a';g.font='30px '+TF;g.fillText('#ШколаБЛАГОполучия',W/2,1190);g.fillText('#МойШагПротивКонфликта',W/2,1232)}
+TH.forEach((c,i)=>{const b=document.createElement('button');b.className='sw'+(i?'':' on');b.style.background=`linear-gradient(135deg,${c[0]},${c[1]})`;b.onclick=()=>{th=i;[...$('th').children].forEach((x,k)=>x.classList.toggle('on',k===i));draw()};$('th').appendChild(b)});
+ST.forEach((s,i)=>{const b=document.createElement('button');b.className='em'+(i?'':' on');b.textContent=s;b.onclick=()=>{st=s;[...$('st').children].forEach((x,k)=>x.classList.toggle('on',k===i));draw()};$('st').appendChild(b)});
+ID.forEach(t=>{const b=document.createElement('button');b.className='ch';b.textContent=t;b.onclick=()=>{$('tx').value=t;draw()};$('ch').appendChild(b)});
+['to','tx','fr'].forEach(i=>$(i).addEventListener('input',draw));
+$('save').onclick=()=>{draw();cv.toBlob(async b=>{const f=new File([b],'otkrytka-dobra.png',{type:'image/png'});
+ try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Искусство Добра'});return}}catch(e){}
+ $('out').src=URL.createObjectURL(b);$('outw').style.display='flex'},'image/png')};
+draw();
+</script></body></html>
